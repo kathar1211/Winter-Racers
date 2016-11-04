@@ -21,8 +21,8 @@ public class Sled : MonoBehaviour {
 			sled = gSled.GetComponent<Rigidbody2D>();
 		}
 		x = Input.GetAxis ("Horizontal");
-		if(Input.GetButton("A")) {
-			//'Debug.Log("A");
+		if(Input.GetAxis("RTB") != 0) {
+			Debug.Log("HELLO");
 			if(x !=0 ){
 				Turn();
 			}
@@ -46,7 +46,6 @@ public class Sled : MonoBehaviour {
 	public void Move(){
 		//speed += acceleration * Time.deltaTime;
 		sled.AddForce (transform.up);
-
 		LimitVelocity ();
 	}
 
@@ -55,9 +54,9 @@ public class Sled : MonoBehaviour {
 			sled.velocity = sled.velocity.normalized;
 			Debug.Log (sled.velocity);
 			sled.velocity *= maxSpeed;
-
 		}
 	}
+
 	public void DriftControl(){
 		sled.AddForce (-1 * Vector3.Dot (sled.velocity, transform.right) * transform.right, ForceMode2D.Impulse);
 	}
