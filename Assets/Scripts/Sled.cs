@@ -5,58 +5,60 @@ public class Sled : MonoBehaviour {
 	float x;
 
 	float deadzone = 0.2f;
-	float maxSpeed = 2f;
+	float maxSpeed = 2.0f;
 	float speed = 0.0f;
 	float acceleration = 0.005f;
-	float drag = 0.002f;
+	float drag = .02f;
 
 	Vector2 dir;
 
 	public GameObject gSled;
-	public Sled(){
-	}
-	
+	Rigidbody2D sled;
+
 	// Update is called once per frame
 	void Update () {
+		if (sled == null) {
+			sled = gSled.GetComponent<Rigidbody2D>();
+		}
 		x = Input.GetAxis ("Horizontal");
-
-		if(Input.GetButton("A")) {
-			//'Debug.Log("A");
+		if(Input.GetAxis("RTB") != 0) {
+			Debug.Log("HELLO");
 			if(x !=0 ){
 				Turn();
 			}
 			Move ();
 		}
+		DriftControl ();
 	}
 
 	public void Turn(){
-		Debug.Log ("TUrn");
 		Vector2 tmp = new Vector2 (x, 0);
 		Vector2 currentUp = transform.up;
-
-		Debug.Log (currentUp);
-
 		if (tmp.sqrMagnitude > deadzone) {
 			dir = tmp.normalized;
 		}
-		gSled.GetComponent<Rigidbody2D> ().AddTorque (-1 * x);
-		//transform.Rotate(new Vector3(0, 0,  * Time.deltaTime * 60));
+		//x is backwards to how we want it for some reason. 
+		sled.AddTorque (-1 * x * (drag / Time.deltaTime));
 
+		LimitVelocity ();
 	}
 
 	public void Move(){
-		Debug.Log ("Move");
-		speed += acceleration * Time.deltaTime;
-		if (gSled.GetComponent<Rigidbody2D> ().velocity.magnitude > maxSpeed) {
-
-			gSled.GetComponent<Rigidbody2D> ().velocity.Normalize ();
-			gSled.GetComponent<Rigidbody2D> ().velocity *= maxSpeed;
-		}
-		gSled.GetComponent<Rigidbody2D> ().AddForce (transform.up);
+		//speed += acceleration * Time.deltaTime;
+		sled.AddForce (transform.up);
+		LimitVelocity ();
 	}
 
-	public void Drift(){
+	public void LimitVelocity(){
+		if (sled.velocity.magnitude > maxSpeed || sled.velocity.magnitude < -1 * maxSpeed) {
+			sled.velocity = sled.velocity.normalized;
+			Debug.Log (sled.velocity);
+			sled.velocity *= maxSpeed;
+		}
+	}
 
+	public void DriftControl(){
+		sled.AddForce (-1 * Vector3.Dot (sled.velocity, transform.right) * transform.right, ForceMode2D.Impulse);
 	}
 
 }
