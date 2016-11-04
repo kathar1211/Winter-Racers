@@ -5,7 +5,7 @@ public class Sled : MonoBehaviour {
 	float x;
 
 	float deadzone = 0.2f;
-	float maxSpeed = 1.5f;
+	float maxSpeed = 2.0f;
 	float speed = 0.0f;
 	float acceleration = 0.005f;
 	float drag = .02f;
