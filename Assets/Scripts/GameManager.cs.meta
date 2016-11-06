@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 79e3f8c444417a34ea817c4376d2a6a3
+timeCreated: 1478458455
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - sledPrefab: {instanceID: 0}
+  - s1: {fileID: 21300000, guid: f46f1e7912c3a8d47afdba53122bada0, type: 3}
+  - s2: {instanceID: 0}
+  - s3: {instanceID: 0}
+  - s4: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
