@@ -5,6 +5,11 @@ public class Sled : MonoBehaviour {
 
 	public Vector2 startPos;
 
+	public string RTB;
+	public string LTB;
+	public string Horizontal;
+	public string A;
+
 	float x;
 
 	float deadzone = 0.2f;
@@ -23,8 +28,9 @@ public class Sled : MonoBehaviour {
 		if (sled == null) {
 			sled = gSled.GetComponent<Rigidbody2D>();
 		}
-		x = Input.GetAxis ("Horizontal");
-		if(Input.GetAxis("RTB") != 0) {
+		x = Input.GetAxis (Horizontal);
+		Debug.Log (x);
+		if(Input.GetAxis(RTB) != 0) {
 			Debug.Log("HELLO");
 			if(x !=0 ){
 				Turn();
