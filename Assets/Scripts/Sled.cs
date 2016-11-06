@@ -15,7 +15,10 @@ public class Sled : MonoBehaviour {
 
 	Vector2 dir;
 
-	public GameObject gSled;
+    float boostTimer = 5.0f;
+    bool usingBoost = false;
+
+    public GameObject gSled;
 	Rigidbody sled;
 
 	// Update is called once per frame
@@ -23,7 +26,10 @@ public class Sled : MonoBehaviour {
 		if (sled == null) {
 			sled = gSled.GetComponent<Rigidbody>();
 		}
-		x = Input.GetAxis("Horizontal");
+
+        Boost();
+
+		x = Input.GetAxis ("Horizontal");
 		if(Input.GetAxis("RTB") != 0) {
 			Debug.Log("HELLO");
 			if(x !=0 ){
@@ -64,5 +70,36 @@ public class Sled : MonoBehaviour {
 		sled.AddForce (-1 * Vector3.Dot (sled.velocity, transform.right) * transform.right, ForceMode.Impulse);
 	}
 
+    public void Boost()
+    {
+        if (GetComponent<BoostBar>().BoostReady() == true)
+        {
+            boostTimer = 5.0f;
+            if (Input.GetButton("A"))
+            {
+                usingBoost = true;
+                Debug.Log("Boostin'");
+            }
+        }
+
+        if (usingBoost)
+        {
+            if (boostTimer > 0)
+            {
+                //increase maxspeed and acceleration while boost active
+                maxSpeed = 3.0f;
+                acceleration = .01f;
+            }
+            else
+            {
+                //end boost, reset original values
+                usingBoost = false;
+                maxSpeed = 2.0f;
+                acceleration = 0.005f;
+                Debug.Log("End Boost");
+            }
+            boostTimer -= Time.deltaTime;
+        }
+    }
 }
 
