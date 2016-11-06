@@ -2,6 +2,9 @@
 using System.Collections;
 
 public class Sled : MonoBehaviour {
+
+	public Vector2 startPos;
+
 	float x;
 
 	float deadzone = 0.2f;
