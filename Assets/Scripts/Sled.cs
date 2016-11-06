@@ -16,22 +16,22 @@ public class Sled : MonoBehaviour {
 	Vector2 dir;
 
 	public GameObject gSled;
-	Rigidbody2D sled;
+	Rigidbody sled;
 
 	// Update is called once per frame
 	void Update () {
 		if (sled == null) {
-			sled = gSled.GetComponent<Rigidbody2D>();
+			sled = gSled.GetComponent<Rigidbody>();
 		}
-		x = Input.GetAxis ("Horizontal");
+		x = Input.GetAxis("Horizontal");
 		if(Input.GetAxis("RTB") != 0) {
 			Debug.Log("HELLO");
 			if(x !=0 ){
 				Turn();
 			}
-			Move ();
+			Move();
 		}
-		DriftControl ();
+		DriftControl();
 	}
 
 	public void Turn(){
@@ -40,16 +40,16 @@ public class Sled : MonoBehaviour {
 		if (tmp.sqrMagnitude > deadzone) {
 			dir = tmp.normalized;
 		}
-		//x is backwards to how we want it for some reason. 
-		sled.AddTorque (-1 * x * (drag / Time.deltaTime));
-
-		LimitVelocity ();
+        //x is backwards to how we want it for some reason. 
+        //sled.AddTorque(-1 * x * (drag / Time.deltaTime));
+        sled.AddTorque(new Vector3(0, 0, -1 * x * (drag / Time.deltaTime)));
+		LimitVelocity();
 	}
 
 	public void Move(){
 		//speed += acceleration * Time.deltaTime;
-		sled.AddForce (transform.up);
-		LimitVelocity ();
+		sled.AddForce(transform.up);
+		LimitVelocity();
 	}
 
 	public void LimitVelocity(){
@@ -61,7 +61,7 @@ public class Sled : MonoBehaviour {
 	}
 
 	public void DriftControl(){
-		sled.AddForce (-1 * Vector3.Dot (sled.velocity, transform.right) * transform.right, ForceMode2D.Impulse);
+		sled.AddForce (-1 * Vector3.Dot (sled.velocity, transform.right) * transform.right, ForceMode.Impulse);
 	}
 
 }
