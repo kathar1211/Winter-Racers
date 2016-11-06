@@ -20,7 +20,10 @@ public class Sled : MonoBehaviour {
 
 	Vector2 dir;
 
-	public GameObject gSled;
+    float boostTimer = 5.0f;
+    bool usingBoost = false;
+
+    public GameObject gSled;
 	Rigidbody2D sled;
 
 	// Update is called once per frame
@@ -28,12 +31,15 @@ public class Sled : MonoBehaviour {
 		if (sled == null) {
 			sled = gSled.GetComponent<Rigidbody2D>();
 		}
+
 		x = Input.GetAxis (Horizontal);
-		Debug.Log (x);
 		if(Input.GetAxis(RTB) != 0) {
 			Debug.Log("HELLO");
 			if(x !=0 ){
 				Turn();
+			}
+			if(Input.GetButton(A)){
+			   Boost ();
 			}
 			Move ();
 		}
@@ -69,6 +75,43 @@ public class Sled : MonoBehaviour {
 	public void DriftControl(){
 		sled.AddForce (-1 * Vector3.Dot (sled.velocity, transform.right) * transform.right, ForceMode2D.Impulse);
 	}
+
+    public void Boost()
+    {
+        if (GetComponent<BoostBar>().BoostReady() == true)
+        {
+            boostTimer = 5.0f;
+            if (Input.GetButton(A))
+            {
+                usingBoost = true;
+                Debug.Log("Boostin'");
+            }
+        }
+
+        if (usingBoost)
+        {
+            if (boostTimer > 0)
+            {
+                //increase maxspeed and acceleration while boost active
+                maxSpeed = 79999.0f;
+                acceleration = 6.0f;
+				sled.AddForce (transform.up*acceleration);
+            }
+            else
+            {
+                //end boost, reset original values
+                usingBoost = false;
+                maxSpeed = 2.0f;
+                acceleration = 0.005f;
+                Debug.Log("End Boost");
+            }
+
+            boostTimer -= Time.deltaTime;
+        }
+
+
+
+    }
 
 }
 
