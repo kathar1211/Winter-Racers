@@ -26,15 +26,17 @@ public class GameManager : MonoBehaviour {
 		CreatePlayerList ();
 
         //assign boost bars
+		Instantiate (boostBar1, transform.position, transform.rotation);
+		Instantiate (boostBar2, transform.position, transform.rotation);
+		//boostBar1.transform.SetParent (Canvas);
+		//boostBar2.transform.SetParent (Canvas);
         player1.GetComponent<BoostBar>().CookieMeter = boostBar1;
         player2.GetComponent<BoostBar>().CookieMeter = boostBar2;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetButton("A")){
-			Debug.Log ("A");
-		}
+
 	}
 
 	public void CreatePlayerList(){

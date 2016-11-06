@@ -10,7 +10,6 @@ public class StateManager : MonoBehaviour {
         Menu,
         Instruction,
         Game,
-        Pause,
         GameOver 
     }
 
@@ -19,6 +18,8 @@ public class StateManager : MonoBehaviour {
     private GameObject canvas;
     private Color white;
     private int instructIndex;
+    private GameObject[] players;
+    private int winningPlayer;
     public Text canvasTxt;
     public Image canvasImg;
     public Sprite[] menuBackgrounds;
@@ -35,6 +36,8 @@ public class StateManager : MonoBehaviour {
         //Prep
         canvas.SetActive(true);
         Time.timeScale = 0;
+
+        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     void setScreen(State s)
@@ -85,7 +88,7 @@ public class StateManager : MonoBehaviour {
                 //}
                 canvasTxt.alignment = TextAnchor.LowerCenter;
                 canvasTxt.fontSize = 18;
-                canvasTxt.text = "Press BACK to Quit. Press START to try again!\n";
+                canvasTxt.text = "Player " + winningPlayer + " Wins!\n\nPress BACK to Quit. Press START to try again!\n";
                 break;
         }
     }
@@ -125,32 +128,16 @@ public class StateManager : MonoBehaviour {
 
             case State.Game:
                 setScreen(currState);
-                //Check Input
-                if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
-                {
-                    //Pause the Game!
-                    currState = State.Pause;
-                }
                 //Check GameOver
-                //if ()
-                //{
-                //    //Did they lose or win?
-                //    currState = State.GameOver;
-                //}
-                break;
-
-            case State.Pause:
-                setScreen(currState);
-                //Check Input
-                if (Input.GetKeyDown(KeyCode.P))
+                for (int i = 0; i < players.Length; i++)
                 {
-                    //Unpause the Game!
-                    currState = State.Game;
-                }
-                else if(Input.GetKeyDown(KeyCode.Escape))
-                {
-                    //Quit the Game!
-                    Application.Quit();
+                    if (players[i].GetComponent<Sled>().currLap == 2)
+                    {
+                        //Did they lose or win?
+                        //players[i] wins!
+                        winningPlayer = i;
+                        currState = State.GameOver;
+                    }
                 }
                 break;
 

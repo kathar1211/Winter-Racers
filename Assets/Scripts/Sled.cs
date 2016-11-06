@@ -5,6 +5,12 @@ public class Sled : MonoBehaviour {
 
 	public Vector2 startPos;
 
+	public string RTB;
+	public string LTB;
+	public string Horizontal;
+	public string A;
+
+
 	float x;
 
 	float deadzone = 0.2f;
@@ -18,6 +24,9 @@ public class Sled : MonoBehaviour {
     float boostTimer = 5.0f;
     bool usingBoost = false;
 
+    public bool isCheating = false;
+    public int currLap = 0;
+
     public GameObject gSled;
 	Rigidbody sled;
 
@@ -27,15 +36,17 @@ public class Sled : MonoBehaviour {
 			sled = gSled.GetComponent<Rigidbody>();
 		}
 
-        Boost();
-
-		x = Input.GetAxis ("Horizontal");
-		if(Input.GetAxis("RTB") != 0) {
+		x = Input.GetAxis (Horizontal);
+		if(Input.GetAxis(RTB) != 0) {
 			Debug.Log("HELLO");
 			if(x !=0 ){
 				Turn();
 			}
-			Move();
+
+			if(Input.GetButton(A)){
+			   Boost ();
+			}
+			Move ();
 		}
 		DriftControl();
 	}
@@ -75,7 +86,7 @@ public class Sled : MonoBehaviour {
         if (GetComponent<BoostBar>().BoostReady() == true)
         {
             boostTimer = 5.0f;
-            if (Input.GetButton("A"))
+            if (Input.GetButton(A))
             {
                 usingBoost = true;
                 Debug.Log("Boostin'");
@@ -87,8 +98,9 @@ public class Sled : MonoBehaviour {
             if (boostTimer > 0)
             {
                 //increase maxspeed and acceleration while boost active
-                maxSpeed = 3.0f;
-                acceleration = .01f;
+                maxSpeed = 79999.0f;
+                acceleration = 6.0f;
+				sled.AddForce (transform.up*acceleration);
             }
             else
             {
@@ -100,6 +112,10 @@ public class Sled : MonoBehaviour {
             }
             boostTimer -= Time.deltaTime;
         }
+    }
+
+    public void CheatCheck()
+    {
     }
 }
 
