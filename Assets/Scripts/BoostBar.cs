@@ -13,15 +13,22 @@ public class BoostBar : MonoBehaviour {
      * */
 
     // Take in an array of objects that will make up the boostbar
-    public GameObject[] boostCircles;
+    //public GameObject[] boostCircles;
     //I'm using the UI bar that's set up in the main branch instead
-    public GameObject CookieMeter;
-    RectTransform meter; 
+
+   
+	public GameObject sled;
+	RectTransform meter; 
+
+	public float MeterWidth{
+		get { return meter.rect.width;}
+		set { meter.sizeDelta = new Vector2(value, meter.rect.height);}
+	}
 
 	// Use this for initialization
 	void Start () {
 
-        meter = CookieMeter.GetComponent<RectTransform>();
+        meter = this.GetComponent<RectTransform>();
 
         // All shapes will start filled in
 
@@ -41,38 +48,18 @@ public class BoostBar : MonoBehaviour {
         // Check if player has enough boost power to increase speed. 
 
         // Bar will drain right to left in a line so probably going to be UI elements
-	
 	}
 
-    void OnCollisionEnter2D(Collision2D c)
-    {
-        //check for collision with cookies
-        if (c.collider.gameObject.tag == "Cookie")
-        {
-            //on collision increase cookie meter
-            //max width is 100
-            //increas by 20 for now - 5 cookies to fill meter
-            if (meter.rect.width <= 80)
-            {
-                meter.sizeDelta = new Vector2(meter.rect.width + 20, meter.rect.height);
-            }
-            else
-            {
-                meter.sizeDelta = new Vector2(100, meter.rect.height);
-            }
+    public void IncreaseBoost(){
 
-            Destroy(c.collider.gameObject);
-
-        }
-
-
-    }
+	}
 
     //let the main sled script know if its time to boost
     public bool BoostReady()
     {
         if (meter.rect.width == 100)
         {
+			Debug.Log (meter.rect.width);
             return true;
         }
         return false;
