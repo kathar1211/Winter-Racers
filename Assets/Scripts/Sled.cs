@@ -83,11 +83,15 @@ public class Sled : MonoBehaviour {
 		}
 	}
 
-    void OnCollisionEnter(Collision c)
+    void OnTriggerEnter(Collider c)
     {
-        if (c.collider.gameObject.tag == "Cookier")
+
+        eatedCookie = true;
+        ++cookieCount;
+
+        if (c.gameObject.tag == "Cookie")
         {
-            Destroy(c.collider.gameObject);
+            Destroy(c.gameObject);
 
         }
     }
