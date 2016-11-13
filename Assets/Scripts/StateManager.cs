@@ -16,12 +16,11 @@ public class StateManager : MonoBehaviour {
     private State currState;
     private State prevState;
     private GameObject canvas;
-    private Color white;
     private int instructIndex;
     private GameObject[] players;
     private int winningPlayer;
-    public Text canvasTxt;
-    public Image canvasImg;
+    public Text canvasTxt;  //Menu txt
+    public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
 
     // Use this for initialization
@@ -36,8 +35,6 @@ public class StateManager : MonoBehaviour {
         //Prep
         canvas.SetActive(true);
         Time.timeScale = 0;
-
-        players = GameObject.FindGameObjectsWithTag("Player");
     }
 
     void setScreen(State s)
@@ -52,7 +49,7 @@ public class StateManager : MonoBehaviour {
         {
             case State.Menu:
                 canvasImg.sprite = menuBackgrounds[0];
-                canvasImg.color = white;
+                canvasImg.color = Color.white;
                 canvasTxt.fontSize = 36;
                 canvasTxt.color = Color.black;
                 canvasTxt.text = "";
@@ -60,12 +57,14 @@ public class StateManager : MonoBehaviour {
 
             case State.Instruction:
                 canvasImg.sprite = menuBackgrounds[instructIndex];
-                canvasImg.color = white;
+                canvasImg.color = Color.white;
                 canvasTxt.fontSize = 22;
                 canvasTxt.text = "";
                 break;
 
             case State.Game:
+                //Get Players
+                getPlayers();
                 //Hide Canvas
                 canvasImg.color = Color.clear;
                 //Show UI
@@ -81,14 +80,11 @@ public class StateManager : MonoBehaviour {
                 Time.timeScale = 0f;
                 //Display Canvas
                 canvas.SetActive(true);
-                canvasImg.color = white;
-                //if ()
-                //{
-                //    canvasImg.sprite = menuBackgrounds[4];
-                //}
+                canvasImg.color = Color.white;
+                canvasImg.sprite = menuBackgrounds[4];
                 canvasTxt.alignment = TextAnchor.LowerCenter;
                 canvasTxt.fontSize = 18;
-                canvasTxt.text = "Player " + winningPlayer + " Wins!\n\nPress BACK to Quit. Press START to try again!\n";
+                canvasTxt.text = "Player " + (winningPlayer+1) + " Wins!\n\nPress BACK to Quit. Press START to try again!\n";
                 break;
         }
     }
@@ -111,7 +107,7 @@ public class StateManager : MonoBehaviour {
                 {
                     setScreen(currState);
                     //Check Input
-                    if (Input.GetButton("7"))
+                    if (Input.GetButtonDown("Submit"))
                     {
                         //Continue!
                         if (instructIndex < 3)
@@ -133,14 +129,15 @@ public class StateManager : MonoBehaviour {
                 {
                     if (players[i].GetComponent<Sled>().currLap == 2)
                     {
-                        //Did they lose or win?
                         //players[i] wins!
+                        Debug.Log("Where's this end screen?!");
                         winningPlayer = i;
                         currState = State.GameOver;
                     }
                 }
                 break;
 
+            //Needs to be adapted for controller use!!!
             case State.GameOver:
                 setScreen(currState);
                 //Check Input
@@ -157,4 +154,11 @@ public class StateManager : MonoBehaviour {
                 break;
         }
 	}
+
+    //To retrieve players once the game starts
+    void getPlayers()
+    {
+        players = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(players);
+    }
 }
