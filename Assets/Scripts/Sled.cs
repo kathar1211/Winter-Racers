@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Sled : MonoBehaviour {
 
+
+	public GameObject boostBar;
 	public Vector2 startPos;
 
 	public string RTB;
@@ -10,6 +12,8 @@ public class Sled : MonoBehaviour {
 	public string Horizontal;
 	public string A;
 
+	private int cookieCount;
+	private bool eatedCookie;
 
 	float x;
 
@@ -30,6 +34,10 @@ public class Sled : MonoBehaviour {
     public GameObject gSled;
 	Rigidbody sled;
 
+	void Start(){
+		Instantiate (boostBar, boostBar.transform.position, boostBar.transform.rotation);
+	}
+
 	// Update is called once per frame
 	void Update () {
 		if (sled == null) {
@@ -38,7 +46,7 @@ public class Sled : MonoBehaviour {
 
 		x = Input.GetAxis (Horizontal);
 		if(Input.GetAxis(RTB) != 0) {
-			Debug.Log("HELLO");
+
 			if(x !=0 ){
 				Turn();
 			}
@@ -48,7 +56,35 @@ public class Sled : MonoBehaviour {
 			}
 			Move ();
 		}
+
+        //backing up
+        if (Input.GetAxis(LTB)!= 0)
+        {
+            if (x != 0)
+            {
+                Turn();
+            }           
+            MoveBackwards();
+        }
 		DriftControl();
+	}
+
+	//NOT BEING CALLALED
+	void OnCollisionEnter2D(Collision2D c)
+	{
+		Debug.Log ("G:KJRG{I");
+		//check for collision with cookies
+		if (c.collider.gameObject.tag == "Cookie")
+		{
+			Debug.Log ("dhfkja");
+			eatedCookie = true; 
+			++cookieCount;
+			Destroy(c.collider.gameObject);	
+		}
+	}
+
+	public void UpdateCookieMeter(){
+		boostBar.GetComponent<BoostBar>().MeterWidth = cookieCount * 20;
 	}
 
 	public void Turn(){
@@ -69,7 +105,14 @@ public class Sled : MonoBehaviour {
 		LimitVelocity();
 	}
 
-	public void LimitVelocity(){
+    public void MoveBackwards()
+    {
+        //speed += acceleration * Time.deltaTime;
+        sled.AddForce(transform.up * -1);
+        LimitVelocity();
+    }
+
+    public void LimitVelocity(){
 		if (sled.velocity.magnitude > maxSpeed || sled.velocity.magnitude < -1 * maxSpeed) {
 			sled.velocity = sled.velocity.normalized;
 			Debug.Log (sled.velocity);
@@ -83,7 +126,8 @@ public class Sled : MonoBehaviour {
 
     public void Boost()
     {
-        if (GetComponent<BoostBar>().BoostReady() == true)
+		//IS NULL??? BUT IT"S NOT???
+        if (boostBar != null && boostBar.GetComponent<BoostBar>().BoostReady())
         {
             boostTimer = 5.0f;
             if (Input.GetButton(A))
@@ -116,6 +160,20 @@ public class Sled : MonoBehaviour {
 
     public void CheatCheck()
     {
+
     }
+
+
+
+	//Properties for cookie eating accessed by GameManager
+	public int CookieCount{
+		get{ return cookieCount;}
+		set{ cookieCount = value;}
+	}
+
+	public bool EatedCookie{
+		get { return eatedCookie;}
+		set { eatedCookie = value;}
+	}
 }
 
