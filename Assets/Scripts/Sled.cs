@@ -35,7 +35,7 @@ public class Sled : MonoBehaviour {
 	Rigidbody sled;
 
 	void Start(){
-		Instantiate (boostBar, boostBar.transform.position, boostBar.transform.rotation);
+		//Instantiate (boostBar, boostBar.transform.position, boostBar.transform.rotation);
 	}
 
 	// Update is called once per frame
@@ -82,6 +82,15 @@ public class Sled : MonoBehaviour {
 			Destroy(c.collider.gameObject);	
 		}
 	}
+
+    void OnCollisionEnter(Collision c)
+    {
+        if (c.collider.gameObject.tag == "Cookier")
+        {
+            Destroy(c.collider.gameObject);
+
+        }
+    }
 
 	public void UpdateCookieMeter(){
 		boostBar.GetComponent<BoostBar>().MeterWidth = cookieCount * 20;
