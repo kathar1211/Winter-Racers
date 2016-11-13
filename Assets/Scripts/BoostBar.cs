@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class BoostBar : MonoBehaviour {
 
@@ -18,7 +19,9 @@ public class BoostBar : MonoBehaviour {
 
    
 	public GameObject sled;
-	RectTransform meter; 
+	RectTransform meter;
+    public Text txt;
+    public GameObject bar;
 
 	public float MeterWidth{
 		get { return meter.rect.width;}
@@ -35,6 +38,14 @@ public class BoostBar : MonoBehaviour {
         // I'm thinking of a gradient where it starts at green and goes to yellow then red as you fill it more and more
 
     }
+
+    public void Activate()
+    {
+        //set components to be visible
+        this.GetComponent<Image>().enabled = true;
+        txt.GetComponent<Text>().enabled = true;
+        bar.GetComponent<Image>().enabled = true;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -48,6 +59,11 @@ public class BoostBar : MonoBehaviour {
         // Check if player has enough boost power to increase speed. 
 
         // Bar will drain right to left in a line so probably going to be UI elements
+        //
+
+        //make sure underlying bar has corresponding width
+        bar.GetComponent<RectTransform>().sizeDelta = new Vector2(100 - MeterWidth, meter.rect.height);
+
 	}
 
     public void IncreaseBoost(int value){

@@ -48,6 +48,7 @@ public class StateManager : MonoBehaviour {
         switch (s)
         {
             case State.Menu:
+                canvasImg.enabled = true;
                 canvasImg.sprite = menuBackgrounds[0];
                 canvasImg.color = Color.white;
                 canvasTxt.fontSize = 36;
@@ -80,8 +81,7 @@ public class StateManager : MonoBehaviour {
                 Time.timeScale = 0f;
                 //Display Canvas
                 canvas.SetActive(true);
-                canvasImg.color = Color.white;
-                canvasImg.sprite = menuBackgrounds[4];
+                canvasImg.color = Color.clear;
                 canvasTxt.alignment = TextAnchor.LowerCenter;
                 canvasTxt.fontSize = 18;
                 canvasTxt.text = "Player " + (winningPlayer+1) + " Wins!\n\nPress BACK to Quit. Press START to try again!\n";
@@ -141,12 +141,12 @@ public class StateManager : MonoBehaviour {
             case State.GameOver:
                 setScreen(currState);
                 //Check Input
-                if (Input.GetKeyDown(KeyCode.Escape))
+                if (Input.GetButtonDown("Quit"))
                 {
                     //Quit the Game!
                     Application.Quit();
                 }
-                else if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+                else if (Input.GetButtonDown("Start"))
                 {
                     //Restart the Game!
                     Application.LoadLevel("WinterRacers");
