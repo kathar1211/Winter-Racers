@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour {
 		if (c > 0) {
 			Debug.Log("Detected " + c + " controllers");
 			for (int i = 0; i < c; ++i){
-                players[i] = (GameObject)Instantiate(players[i], players[i].transform.position, transform.rotation);
+                players[i] = (GameObject)Instantiate(players[i], players[i].transform.position, players[i].transform.rotation);
                 Debug.Log("should have made a player");
                
                 //assign boostbar and make it visible
