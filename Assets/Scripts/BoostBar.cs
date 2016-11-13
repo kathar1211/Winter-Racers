@@ -50,8 +50,8 @@ public class BoostBar : MonoBehaviour {
         // Bar will drain right to left in a line so probably going to be UI elements
 	}
 
-    public void IncreaseBoost(){
-
+    public void IncreaseBoost(int value){
+        MeterWidth = MeterWidth + value;
 	}
 
     //let the main sled script know if its time to boost

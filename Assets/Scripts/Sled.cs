@@ -56,6 +56,16 @@ public class Sled : MonoBehaviour {
 			}
 			Move ();
 		}
+
+        //backing up
+        if (Input.GetAxis(LTB)!= 0)
+        {
+            if (x != 0)
+            {
+                Turn();
+            }           
+            MoveBackwards();
+        }
 		DriftControl();
 	}
 
@@ -95,7 +105,14 @@ public class Sled : MonoBehaviour {
 		LimitVelocity();
 	}
 
-	public void LimitVelocity(){
+    public void MoveBackwards()
+    {
+        //speed += acceleration * Time.deltaTime;
+        sled.AddForce(transform.up * -1);
+        LimitVelocity();
+    }
+
+    public void LimitVelocity(){
 		if (sled.velocity.magnitude > maxSpeed || sled.velocity.magnitude < -1 * maxSpeed) {
 			sled.velocity = sled.velocity.normalized;
 			Debug.Log (sled.velocity);

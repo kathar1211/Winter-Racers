@@ -13,12 +13,12 @@ public class GameManager : MonoBehaviour {
 	public GameObject player4;
 	int c;//number of controllers
 
-   /*public GameObject boostBar1;
+    public GameObject boostBar1;
     public GameObject boostBar2;
-    public GameObject boostBar3;
-    public GameObject boostBar4;
+    //public GameObject boostBar3;
+    //public GameObject boostBar4;
 
-*/
+
     // Use this for initialization
     void Start () {
 		players.Add (player1);
