@@ -51,9 +51,8 @@ public class Sled : MonoBehaviour {
 				Turn();
 			}
 
-			if(Input.GetButton(A)){
-			   Boost ();
-			}
+			
+			Boost ();			
 			Move ();
 		}
 
@@ -86,13 +85,12 @@ public class Sled : MonoBehaviour {
     void OnTriggerEnter(Collider c)
     {
 
-        eatedCookie = true;
-        ++cookieCount;
-
-        if (c.gameObject.tag == "Cookie")
+        if (c.gameObject.tag == "Cookie" && cookieCount < 5)
         {
+            eatedCookie = true;
+            ++cookieCount;
             Destroy(c.gameObject);
-
+            UpdateCookieMeter();
         }
     }
 
@@ -128,7 +126,7 @@ public class Sled : MonoBehaviour {
     public void LimitVelocity(){
 		if (sled.velocity.magnitude > maxSpeed || sled.velocity.magnitude < -1 * maxSpeed) {
 			sled.velocity = sled.velocity.normalized;
-			Debug.Log (sled.velocity);
+			//Debug.Log (sled.velocity);
 			sled.velocity *= maxSpeed;
 		}
 	}
@@ -142,10 +140,12 @@ public class Sled : MonoBehaviour {
 		//IS NULL??? BUT IT"S NOT???
         if (boostBar != null && boostBar.GetComponent<BoostBar>().BoostReady())
         {
-            boostTimer = 5.0f;
+            boostTimer = 3.0f;
             if (Input.GetButton(A))
             {
                 usingBoost = true;
+                boostBar.GetComponent<BoostBar>().ResetMeter();
+                cookieCount = 0;
                 Debug.Log("Boostin'");
             }
         }
@@ -158,6 +158,7 @@ public class Sled : MonoBehaviour {
                 maxSpeed = 79999.0f;
                 acceleration = 6.0f;
 				sled.AddForce (transform.up*acceleration);
+                //Debug.Log(boostTimer);
             }
             else
             {
@@ -166,6 +167,7 @@ public class Sled : MonoBehaviour {
                 maxSpeed = 2.0f;
                 acceleration = 0.005f;
                 Debug.Log("End Boost");
+                
             }
             boostTimer -= Time.deltaTime;
         }
