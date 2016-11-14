@@ -45,6 +45,7 @@ public class BoostBar : MonoBehaviour {
         this.GetComponent<Image>().enabled = true;
         txt.GetComponent<Text>().enabled = true;
         bar.GetComponent<Image>().enabled = true;
+        meter = this.GetComponent<RectTransform>();
     }
 	
 	// Update is called once per frame

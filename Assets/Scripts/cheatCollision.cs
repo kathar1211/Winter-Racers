@@ -10,11 +10,11 @@ public class cheatCollision : MonoBehaviour
             bool cheatRef = other.gameObject.GetComponent<Sled>().isCheating;
             if (cheatRef == true)
             {
-                cheatRef = false;
+                other.gameObject.GetComponent<Sled>().isCheating = false;
             }
             else
             {
-                cheatRef = true;
+                other.gameObject.GetComponent<Sled>().isCheating = true;
             }
         }
     }
