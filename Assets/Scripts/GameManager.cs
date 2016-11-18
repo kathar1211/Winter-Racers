@@ -18,14 +18,13 @@ public class GameManager : MonoBehaviour {
     public GameObject boostBar3;
     public GameObject boostBar4;
 
-
     // Use this for initialization
-    void Start () {
-		players.Add (player1);
+    void Start ()
+    {
+        players.Add (player1);
 		players.Add (player2);
 		players.Add (player3);
 		players.Add (player4);
-		
 
 		boostBars.Add (boostBar1);
 		boostBars.Add (boostBar2);
@@ -33,6 +32,7 @@ public class GameManager : MonoBehaviour {
 		boostBars.Add (boostBar4);
 
         CreatePlayerList();
+
         //CreatePlayerCanvas ();
 
         // player1.GetComponent<BoostBar>().CookieMeter = boostBar1;
@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
 		for (int i = 0; i < c; ++i) {
 			if(players[i].GetComponent<Sled>().EatedCookie){
 				//UpdateCookieMeter(i);
@@ -61,8 +62,6 @@ public class GameManager : MonoBehaviour {
                 players[i].GetComponent<Sled>().boostBar = boostBars[i];                
                 boostBars[i].GetComponent<BoostBar>().sled = players[i];
                 boostBars[i].GetComponent<BoostBar>().Activate();
-
-               
             }
 		}
 	}

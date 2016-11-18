@@ -22,19 +22,32 @@ public class StateManager : MonoBehaviour {
     public Text canvasTxt;  //Menu txt
     public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
+    public int numLaps;
 
-    // Use this for initialization
-    void Start ()
+    //To retrieve players once the game starts
+    void getPlayers()
     {
-        //Set Variables
-        currState = State.Menu;
-        prevState = State.GameOver;
-        canvas = GameObject.Find("Canvas");
-        instructIndex = 1;
+        players = GameObject.FindGameObjectsWithTag("Player");
+    }
 
-        //Prep
-        canvas.SetActive(true);
-        Time.timeScale = 0;
+    void checkGameOver()
+    {
+        int finished = 0;
+        while (finished != players.Length)
+        {
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i].GetComponent<Sled>().currLap == numLaps + 1)
+                {
+                    ////players[i] wins!
+                    //winningPlayer = i;
+                    finished += 1;
+                    //Need to add a time variable to the sled class!!!
+                    //players[i].time = Time.time;
+                }
+            }
+        }
+        currState = State.GameOver;
     }
 
     void setScreen(State s)
@@ -89,6 +102,20 @@ public class StateManager : MonoBehaviour {
         }
     }
 
+    // Use this for initialization
+    void Start ()
+    {
+        //Set Variables
+        currState = State.Menu;
+        prevState = State.GameOver;
+        canvas = GameObject.Find("Canvas");
+        instructIndex = 1;
+
+        //Prep
+        canvas.SetActive(true);
+        Time.timeScale = 0;
+    }
+
 	// Update is called once per frame
 	void Update ()
     {
@@ -104,7 +131,6 @@ public class StateManager : MonoBehaviour {
                 break;
 
             case State.Instruction:
-                {
                     setScreen(currState);
                     //Check Input
                     if (Input.GetButtonDown("Submit"))
@@ -119,22 +145,12 @@ public class StateManager : MonoBehaviour {
                             currState = State.Game;
                         }
                     }
-                }
                 break;
 
             case State.Game:
                 setScreen(currState);
                 //Check GameOver
-                for (int i = 0; i < players.Length; i++)
-                {
-                    if (players[i].GetComponent<Sled>().currLap == 2)
-                    {
-                        //players[i] wins!
-                        Debug.Log("Where's this end screen?!");
-                        winningPlayer = i;
-                        currState = State.GameOver;
-                    }
-                }
+                checkGameOver();
                 break;
 
             //Needs to be adapted for controller use!!!
@@ -154,11 +170,4 @@ public class StateManager : MonoBehaviour {
                 break;
         }
 	}
-
-    //To retrieve players once the game starts
-    void getPlayers()
-    {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(players);
-    }
 }
