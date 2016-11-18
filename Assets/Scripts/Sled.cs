@@ -84,12 +84,11 @@ public class Sled : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-
         if (c.gameObject.tag == "Cookie" && cookieCount < 5)
         {
             eatedCookie = true;
             ++cookieCount;
-            Destroy(c.gameObject);
+            c.gameObject.SetActive(false);
             UpdateCookieMeter();
         }
     }
