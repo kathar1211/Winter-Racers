@@ -98,7 +98,7 @@ public class Sled : MonoBehaviour {
         {
             eatedCookie = true;
             ++cookieCount;
-            Destroy(c.gameObject);
+            c.gameObject.SetActive(false);
             UpdateCookieMeter();
         }
 
