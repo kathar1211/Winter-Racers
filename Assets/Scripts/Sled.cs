@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Sled : MonoBehaviour {
-
 
 	public GameObject boostBar;
 	public Vector2 startPos;
@@ -34,6 +34,10 @@ public class Sled : MonoBehaviour {
     public GameObject gSled;
 	Rigidbody sled;
 
+	List<GameObject> items = new List<GameObject>();
+
+	bool raceStart = false;
+
 	void Start(){
 		//Instantiate (boostBar, boostBar.transform.position, boostBar.transform.rotation);
 	}
@@ -44,27 +48,33 @@ public class Sled : MonoBehaviour {
 			sled = gSled.GetComponent<Rigidbody>();
 		}
 
+		if (raceStart)
+			GetInput ();
+
+	}
+
+	public void GetInput(){
 		x = Input.GetAxis (Horizontal);
 		if(Input.GetAxis(RTB) != 0) {
-
+			
 			if(x !=0 ){
 				Turn();
 			}
-
+			
 			
 			Boost ();			
 			Move ();
 		}
-
-        //backing up
-        if (Input.GetAxis(LTB)!= 0)
-        {
-            if (x != 0)
-            {
-                Turn();
-            }           
-            MoveBackwards();
-        }
+		
+		//backing up
+		if (Input.GetAxis(LTB)!= 0)
+		{
+			if (x != 0)
+			{
+				Turn();
+			}           
+			MoveBackwards();
+		}
 		DriftControl();
 	}
 
@@ -84,7 +94,6 @@ public class Sled : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-
         if (c.gameObject.tag == "Cookie" && cookieCount < 5)
         {
             eatedCookie = true;
@@ -92,6 +101,11 @@ public class Sled : MonoBehaviour {
             Destroy(c.gameObject);
             UpdateCookieMeter();
         }
+
+		if (c.gameObject.tag == "Snowball" && items.Count < 2) {
+			items.Add(c.gameObject);
+		}
+
     }
 
 	public void UpdateCookieMeter(){
@@ -178,7 +192,9 @@ public class Sled : MonoBehaviour {
 
     }
 
+	public void DisplayItemRange(int range){
 
+	}
 
 	//Properties for cookie eating accessed by GameManager
 	public int CookieCount{
@@ -189,6 +205,11 @@ public class Sled : MonoBehaviour {
 	public bool EatedCookie{
 		get { return eatedCookie;}
 		set { eatedCookie = value;}
+	}
+
+	public bool RaceStart{
+		get { return raceStart;}
+		set { raceStart = value;}
 	}
 }
 

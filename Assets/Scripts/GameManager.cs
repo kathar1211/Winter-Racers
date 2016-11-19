@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour {
     public GameObject boostBar3;
     public GameObject boostBar4;
 
+	float countdownTimer = 0.0f;
+
 
     // Use this for initialization
     void Start () {
@@ -46,8 +48,21 @@ public class GameManager : MonoBehaviour {
 				//UpdateCookieMeter(i);
 			}
 		}
+		ItsTheFinalCountdown ();
+
 	}
 
+	public void ItsTheFinalCountdown(){
+		if (countdownTimer < 3.0f) {
+			countdownTimer += Time.deltaTime;
+		} else {
+			for (int i = 0; i < c; ++i) {
+				players[i].GetComponent<Sled>().RaceStart = true;
+				Debug.Log ("race start!");
+				
+			}
+		}
+	}
 
 	public void CreatePlayerList(){
 		c = Input.GetJoystickNames ().Length;
@@ -61,23 +76,8 @@ public class GameManager : MonoBehaviour {
                 players[i].GetComponent<Sled>().boostBar = boostBars[i];                
                 boostBars[i].GetComponent<BoostBar>().sled = players[i];
                 boostBars[i].GetComponent<BoostBar>().Activate();
-
-               
             }
 		}
 	}
-/*
-	public void CreatePlayerCanvas(){
-		for (int i = 0; i < c; ++i) {
-			Instantiate(boostBars[i], boostBars[i].transform.position, transform.rotation);
-		}
-	}
-
-	//i know this is gross I'm so sorry
-	public void UpdateCookieMeter(int i){
-			boostBars[i].GetComponent<BoostBar>().MeterWidth = players[i].GetComponent<Sled>().CookieCount * 20;	
-	}
-*/
-
 
 }
