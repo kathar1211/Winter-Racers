@@ -19,6 +19,7 @@ public class StateManager : MonoBehaviour {
     private int instructIndex;
     private GameObject[] players;
     private int winningPlayer;
+    private Sled tempSled;
     public Text canvasTxt;  //Menu txt
     public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
@@ -33,7 +34,7 @@ public class StateManager : MonoBehaviour {
     void checkGameOver()
     {
         int finished = 0;
-        while (finished != players.Length)
+        if (finished != players.Length)
         {
             for (int i = 0; i < players.Length; i++)
             {
@@ -42,12 +43,24 @@ public class StateManager : MonoBehaviour {
                     ////players[i] wins!
                     //winningPlayer = i;
                     finished += 1;
-                    //Need to add a time variable to the sled class!!!
-                    //players[i].time = Time.time;
+                    players[i].GetComponent<Sled>().time = Time.time;
+                    //Disabling the script may allow the sled to stay, but prevent further input.
+                    //players[i].GetComponent<Sled>().enabled = false;
                 }
             }
         }
-        currState = State.GameOver;
+        if (finished == players.Length)
+        {
+            currState = State.GameOver;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (tempSled.time > players[i].GetComponent<Sled>().time)
+                {
+                    tempSled.time = players[i].GetComponent<Sled>().time;
+                    winningPlayer = i;
+                }
+            }
+        }
     }
 
     void setScreen(State s)
@@ -97,7 +110,8 @@ public class StateManager : MonoBehaviour {
                 canvasImg.color = Color.clear;
                 canvasTxt.alignment = TextAnchor.LowerCenter;
                 canvasTxt.fontSize = 18;
-                canvasTxt.text = "Player " + (winningPlayer+1) + " Wins!\n\nPress BACK to Quit. Press START to try again!\n";
+                canvasTxt.text = "Player " + (winningPlayer + 1) + " Wins!\n" + (int)(tempSled.time / 60) +
+                    ":" + ((tempSled.time % 60)).ToString("n2") + "\nPress BACK to Quit. Press START to try again!\n";
                 break;
         }
     }
@@ -114,10 +128,12 @@ public class StateManager : MonoBehaviour {
         //Prep
         canvas.SetActive(true);
         Time.timeScale = 0;
+        tempSled = new Sled();
+        tempSled.time = float.MaxValue;
     }
 
-	// Update is called once per frame
-	void Update ()
+    // Update is called once per frame
+    void Update ()
     {
 	    switch (currState)
         {
@@ -153,7 +169,6 @@ public class StateManager : MonoBehaviour {
                 checkGameOver();
                 break;
 
-            //Needs to be adapted for controller use!!!
             case State.GameOver:
                 setScreen(currState);
                 //Check Input

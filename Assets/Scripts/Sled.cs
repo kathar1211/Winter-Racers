@@ -30,6 +30,7 @@ public class Sled : MonoBehaviour {
 
     public bool isCheating = false;
     public int currLap = 0;
+    public float time = 0.0f;
 
     public GameObject gSled;
 	Rigidbody sled;
