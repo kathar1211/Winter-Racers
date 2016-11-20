@@ -45,7 +45,7 @@ public class StateManager : MonoBehaviour {
                     finished += 1;
                     players[i].GetComponent<Sled>().time = Time.time;
                     //Disabling the script may allow the sled to stay, but prevent further input.
-                    //players[i].GetComponent<Sled>().enabled = false;
+                    players[i].GetComponent<Sled>().enabled = false;
                 }
             }
         }
