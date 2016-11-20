@@ -19,22 +19,48 @@ public class StateManager : MonoBehaviour {
     private int instructIndex;
     private GameObject[] players;
     private int winningPlayer;
+    private Sled tempSled;
     public Text canvasTxt;  //Menu txt
     public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
+    public int numLaps;
 
-    // Use this for initialization
-    void Start ()
+    //To retrieve players once the game starts
+    void getPlayers()
     {
-        //Set Variables
-        currState = State.Menu;
-        prevState = State.GameOver;
-        canvas = GameObject.Find("Canvas");
-        instructIndex = 1;
+        players = GameObject.FindGameObjectsWithTag("Player");
+    }
 
-        //Prep
-        canvas.SetActive(true);
-        Time.timeScale = 0;
+    void checkGameOver()
+    {
+        int finished = 0;
+        if (finished != players.Length)
+        {
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (players[i].GetComponent<Sled>().currLap == numLaps + 1)
+                {
+                    ////players[i] wins!
+                    //winningPlayer = i;
+                    finished += 1;
+                    players[i].GetComponent<Sled>().time = Time.time;
+                    //Disabling the script may allow the sled to stay, but prevent further input.
+                    //players[i].GetComponent<Sled>().enabled = false;
+                }
+            }
+        }
+        if (finished == players.Length)
+        {
+            currState = State.GameOver;
+            for (int i = 0; i < players.Length; i++)
+            {
+                if (tempSled.time > players[i].GetComponent<Sled>().time)
+                {
+                    tempSled.time = players[i].GetComponent<Sled>().time;
+                    winningPlayer = i;
+                }
+            }
+        }
     }
 
     void setScreen(State s)
@@ -84,13 +110,30 @@ public class StateManager : MonoBehaviour {
                 canvasImg.color = Color.clear;
                 canvasTxt.alignment = TextAnchor.LowerCenter;
                 canvasTxt.fontSize = 18;
-                canvasTxt.text = "Player " + (winningPlayer+1) + " Wins!\n\nPress BACK to Quit. Press START to try again!\n";
+                canvasTxt.text = "Player " + (winningPlayer + 1) + " Wins!\n" + (int)(tempSled.time / 60) +
+                    ":" + ((tempSled.time % 60)).ToString("n2") + "\nPress BACK to Quit. Press START to try again!\n";
                 break;
         }
     }
 
-	// Update is called once per frame
-	void Update ()
+    // Use this for initialization
+    void Start ()
+    {
+        //Set Variables
+        currState = State.Menu;
+        prevState = State.GameOver;
+        canvas = GameObject.Find("Canvas");
+        instructIndex = 1;
+
+        //Prep
+        canvas.SetActive(true);
+        Time.timeScale = 0;
+        tempSled = new Sled();
+        tempSled.time = float.MaxValue;
+    }
+
+    // Update is called once per frame
+    void Update ()
     {
 	    switch (currState)
         {
@@ -104,7 +147,6 @@ public class StateManager : MonoBehaviour {
                 break;
 
             case State.Instruction:
-                {
                     setScreen(currState);
                     //Check Input
                     if (Input.GetButtonDown("Submit"))
@@ -119,25 +161,14 @@ public class StateManager : MonoBehaviour {
                             currState = State.Game;
                         }
                     }
-                }
                 break;
 
             case State.Game:
                 setScreen(currState);
                 //Check GameOver
-                for (int i = 0; i < players.Length; i++)
-                {
-                    if (players[i].GetComponent<Sled>().currLap == 2)
-                    {
-                        //players[i] wins!
-                        Debug.Log("Where's this end screen?!");
-                        winningPlayer = i;
-                        currState = State.GameOver;
-                    }
-                }
+                checkGameOver();
                 break;
 
-            //Needs to be adapted for controller use!!!
             case State.GameOver:
                 setScreen(currState);
                 //Check Input
@@ -154,11 +185,4 @@ public class StateManager : MonoBehaviour {
                 break;
         }
 	}
-
-    //To retrieve players once the game starts
-    void getPlayers()
-    {
-        players = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(players);
-    }
 }
