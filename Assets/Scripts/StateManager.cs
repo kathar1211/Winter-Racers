@@ -23,6 +23,11 @@ public class StateManager : MonoBehaviour {
     public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
 
+	private bool gameStart = false;
+	public bool GameStart{
+		get{ return gameStart;}
+	}
+
     // Use this for initialization
     void Start ()
     {
@@ -68,6 +73,7 @@ public class StateManager : MonoBehaviour {
                 getPlayers();
                 //Hide Canvas
                 canvasImg.color = Color.clear;
+				gameStart = true;
                 //Show UI
 
                 //Continue Game

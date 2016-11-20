@@ -14,6 +14,7 @@ public class Sled : MonoBehaviour {
 
 	private int cookieCount;
 	private bool eatedCookie;
+	private bool holdingItem = false;
 
 	float x;
 
@@ -51,7 +52,11 @@ public class Sled : MonoBehaviour {
 		if (raceStart)
 			GetInput ();
 
-	}
+		if (holdingItem) {
+			DisplayItemHeld();
+		}
+
+	}//updoot
 
 	public void GetInput(){
 		x = Input.GetAxis (Horizontal);
@@ -60,7 +65,6 @@ public class Sled : MonoBehaviour {
 			if(x !=0 ){
 				Turn();
 			}
-			
 			
 			Boost ();			
 			Move ();
@@ -78,20 +82,6 @@ public class Sled : MonoBehaviour {
 		DriftControl();
 	}
 
-	//NOT BEING CALLALED
-	void OnCollisionEnter2D(Collision2D c)
-	{
-		Debug.Log ("G:KJRG{I");
-		//check for collision with cookies
-		if (c.collider.gameObject.tag == "Cookie")
-		{
-			Debug.Log ("dhfkja");
-			eatedCookie = true; 
-			++cookieCount;
-			Destroy(c.collider.gameObject);	
-		}
-	}
-
     void OnTriggerEnter(Collider c)
     {
         if (c.gameObject.tag == "Cookie" && cookieCount < 5)
@@ -104,6 +94,8 @@ public class Sled : MonoBehaviour {
 
 		if (c.gameObject.tag == "Snowball" && items.Count < 2) {
 			items.Add(c.gameObject);
+			c.gameObject.SetActive(false);
+			holdingItem = true;
 		}
 
     }
@@ -125,14 +117,12 @@ public class Sled : MonoBehaviour {
 	}
 
 	public void Move(){
-		//speed += acceleration * Time.deltaTime;
 		sled.AddForce(transform.up);
 		LimitVelocity();
 	}
 
     public void MoveBackwards()
     {
-        //speed += acceleration * Time.deltaTime;
         sled.AddForce(transform.up * -1);
         LimitVelocity();
     }
@@ -140,7 +130,6 @@ public class Sled : MonoBehaviour {
     public void LimitVelocity(){
 		if (sled.velocity.magnitude > maxSpeed || sled.velocity.magnitude < -1 * maxSpeed) {
 			sled.velocity = sled.velocity.normalized;
-			//Debug.Log (sled.velocity);
 			sled.velocity *= maxSpeed;
 		}
 	}
@@ -151,7 +140,6 @@ public class Sled : MonoBehaviour {
 
     public void Boost()
     {
-		//IS NULL??? BUT IT"S NOT???
         if (boostBar != null && boostBar.GetComponent<BoostBar>().BoostReady())
         {
             boostTimer = 3.0f;
@@ -192,7 +180,15 @@ public class Sled : MonoBehaviour {
 
     }
 
+	public void DisplayItemHeld(){
+
+	}
+
 	public void DisplayItemRange(int range){
+
+	}
+
+	public void ThrowSnowball(){
 
 	}
 

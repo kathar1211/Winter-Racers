@@ -18,8 +18,15 @@ public class GameManager : MonoBehaviour {
     public GameObject boostBar3;
     public GameObject boostBar4;
 
-	float countdownTimer = 0.0f;
+	public GameObject countdown;
 
+	public Sprite one;
+	public Sprite two;
+	public Sprite three;
+	public Sprite go;
+
+	private float countdownTimer = 3.0f;
+	private bool counted = false;
 
     // Use this for initialization
     void Start () {
@@ -27,7 +34,6 @@ public class GameManager : MonoBehaviour {
 		players.Add (player2);
 		players.Add (player3);
 		players.Add (player4);
-		
 
 		boostBars.Add (boostBar1);
 		boostBars.Add (boostBar2);
@@ -35,32 +41,46 @@ public class GameManager : MonoBehaviour {
 		boostBars.Add (boostBar4);
 
         CreatePlayerList();
-        //CreatePlayerCanvas ();
 
-        // player1.GetComponent<BoostBar>().CookieMeter = boostBar1;
-        // player2.GetComponent<BoostBar>().CookieMeter = boostBar2;
     }
 	
 	// Update is called once per frame
 	void Update () {
-		for (int i = 0; i < c; ++i) {
-			if(players[i].GetComponent<Sled>().EatedCookie){
-				//UpdateCookieMeter(i);
-			}
+		if (GetComponent<StateManager> ().GameStart && counted == false) {
+		
+			ItsTheFinalCountdown ();
 		}
-		ItsTheFinalCountdown ();
-
 	}
 
 	public void ItsTheFinalCountdown(){
-		if (countdownTimer < 3.0f) {
-			countdownTimer += Time.deltaTime;
-		} else {
+
+		if (countdownTimer <= 3.0f && countdownTimer >= -1.0f) {
+			countdownTimer -= 0.01f;
+
+		} 
+		 if (countdownTimer >= 2.0f) {
+			Debug.Log ("three");
+			countdown.GetComponent<SpriteRenderer>().sprite = three;
+			
+		} 
+		else if (countdownTimer >= 1.0f) {
+			Debug.Log ("two");
+			countdown.GetComponent<SpriteRenderer>().sprite = two;
+		} 
+		else if (countdownTimer >= 0.0f) {
+			countdown.GetComponent<SpriteRenderer>().sprite = one;
+		} 
+		else {
+			Debug.Log ("go");
+			countdown.GetComponent<SpriteRenderer>().sprite = go;
 			for (int i = 0; i < c; ++i) {
-				players[i].GetComponent<Sled>().RaceStart = true;
-				Debug.Log ("race start!");
-				
+				players[i].GetComponent<Sled>().RaceStart = true;		
 			}
+		}
+
+		 if (countdownTimer <= -1.0f) {
+			countdown.SetActive(false);
+			counted = true;
 		}
 	}
 
