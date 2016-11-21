@@ -83,9 +83,9 @@ public class Sled : MonoBehaviour {
 		}
 		DriftControl();
 
-		if (Input.GetButton(X) && items.Count == 0) {
-			ThrowSnowball();
-		}
+		//if (Input.GetButton(X) && items.Count == 0) {
+		//	ThrowSnowball();
+		//}
 
 		//backing up
 		if (Input.GetAxis(LTB)!= 0)
