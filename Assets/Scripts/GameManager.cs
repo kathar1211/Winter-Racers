@@ -29,8 +29,9 @@ public class GameManager : MonoBehaviour {
 	private bool counted = false;
 
     // Use this for initialization
-    void Start () {
-		players.Add (player1);
+    void Start ()
+    {
+        players.Add (player1);
 		players.Add (player2);
 		players.Add (player3);
 		players.Add (player4);
@@ -55,23 +56,20 @@ public class GameManager : MonoBehaviour {
 	public void ItsTheFinalCountdown(){
 
 		if (countdownTimer <= 3.0f && countdownTimer >= -1.0f) {
-			countdownTimer -= 0.01f;
+			countdownTimer -= 0.05f;
 
 		} 
 		 if (countdownTimer >= 2.0f) {
-			Debug.Log ("three");
 			countdown.GetComponent<SpriteRenderer>().sprite = three;
 			
 		} 
 		else if (countdownTimer >= 1.0f) {
-			Debug.Log ("two");
 			countdown.GetComponent<SpriteRenderer>().sprite = two;
 		} 
 		else if (countdownTimer >= 0.0f) {
 			countdown.GetComponent<SpriteRenderer>().sprite = one;
 		} 
 		else {
-			Debug.Log ("go");
 			countdown.GetComponent<SpriteRenderer>().sprite = go;
 			for (int i = 0; i < c; ++i) {
 				players[i].GetComponent<Sled>().RaceStart = true;		

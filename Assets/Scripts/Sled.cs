@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class Sled : MonoBehaviour {
@@ -11,6 +12,7 @@ public class Sled : MonoBehaviour {
 	public string LTB;
 	public string Horizontal;
 	public string A;
+	public string X;
 
 	private int cookieCount;
 	private bool eatedCookie;
@@ -31,16 +33,26 @@ public class Sled : MonoBehaviour {
 
     public bool isCheating = false;
     public int currLap = 0;
+    public float time = 0.0f;
 
     public GameObject gSled;
 	Rigidbody sled;
+
+	private GameObject item;
 
 	List<GameObject> items = new List<GameObject>();
 
 	bool raceStart = false;
 
+	public GameObject itemSprite;
+	public GameObject ThrownSnowball;
+	private GameObject s;
+	//public Image snowballSprite;//this is for when we have multiple objects
+
+
 	void Start(){
 		//Instantiate (boostBar, boostBar.transform.position, boostBar.transform.rotation);
+		itemSprite.SetActive (false);
 	}
 
 	// Update is called once per frame
@@ -69,7 +81,12 @@ public class Sled : MonoBehaviour {
 			Boost ();			
 			Move ();
 		}
-		
+		DriftControl();
+
+		if (Input.GetButton(X) && items.Count == 0) {
+			ThrowSnowball();
+		}
+
 		//backing up
 		if (Input.GetAxis(LTB)!= 0)
 		{
@@ -79,7 +96,7 @@ public class Sled : MonoBehaviour {
 			}           
 			MoveBackwards();
 		}
-		DriftControl();
+
 	}
 
     void OnTriggerEnter(Collider c)
@@ -91,13 +108,28 @@ public class Sled : MonoBehaviour {
             c.gameObject.SetActive(false);
             UpdateCookieMeter();
         }
-
-		if (c.gameObject.tag == "Snowball" && items.Count < 2) {
+		Debug.Log (c.gameObject.tag.ToString ());
+		if (c.gameObject.tag == "Snowball" && items.Count < 1) {
 			items.Add(c.gameObject);
+			itemSprite.SetActive (true);
+			//Debug.Log(itemSprite.GetComponent<Image> ().color.ToString());
+
 			c.gameObject.SetActive(false);
 			holdingItem = true;
+			item = c.gameObject;
 		}
 
+		if (c.gameObject.tag == "ThrownSnowball" && c.gameObject.GetComponent<Snowball>().Thrower != null) {
+			if(c.gameObject.GetComponent<Snowball>().Thrower != gSled.tag){
+				sled.AddTorque(new Vector3(0, 0, -3 * x * (drag / Time.deltaTime)));
+				sled.velocity = new Vector3(0, 0,0);
+				Debug.Log ("Player: " + gSled.name);
+				Debug.Log ("Snowball: " + c.gameObject.GetComponent<Snowball>().Thrower);
+				Destroy(c.gameObject);
+			}
+			holdingItem = false;
+
+		}
     }
 
 	public void UpdateCookieMeter(){
@@ -185,12 +217,28 @@ public class Sled : MonoBehaviour {
 	}
 
 	public void DisplayItemRange(int range){
+		//not doing this for this milestone probably
+
+	}
+
+	public void HitBySnowball(){
+		sled.AddTorque(new Vector3(0, 0, -1 * x * (drag / Time.deltaTime)));
 
 	}
 
 	public void ThrowSnowball(){
-
+		item.GetComponent<Snowball> ().StartPos = transform.position;
+		item.GetComponent<Snowball> ().Dir = transform.up;
+		item.GetComponent<Snowball> ().Thrower = gSled.name;
+		Debug.Log ("sled name: " + gSled.name);
+		item.GetComponent<Snowball> ().Thrown = true;
+		Debug.Log (item.GetComponent<Snowball> ().Thrown);
+		s = (GameObject)Instantiate(ThrownSnowball, transform.position, Quaternion.identity); 
+		items.RemoveAt (0);
+		itemSprite.SetActive (false);
+		Debug.Log (items.Count);
 	}
+
 
 	//Properties for cookie eating accessed by GameManager
 	public int CookieCount{
