@@ -22,6 +22,7 @@ public class BoostBar : MonoBehaviour {
 	RectTransform meter;
     public Text txt;
     public GameObject bar;
+	public Image itemImage;
 
 	public float MeterWidth{
 		get { return meter.rect.width;}
@@ -46,6 +47,7 @@ public class BoostBar : MonoBehaviour {
         txt.GetComponent<Text>().enabled = true;
         bar.GetComponent<Image>().enabled = true;
         meter = this.GetComponent<RectTransform>();
+		itemImage.GetComponent<Image> ().enabled = true;
     }
 	
 	// Update is called once per frame
