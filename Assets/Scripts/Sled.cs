@@ -102,7 +102,7 @@ public class Sled : MonoBehaviour {
 
     void OnTriggerEnter(Collider c)
     {
-        if (c.gameObject.tag == "Cookie" && cookieCount < 5)
+        if (c.gameObject.tag == "Cookie" && cookieCount < 5 && !usingBoost)
         {
             eatedCookie = true;
             ++cookieCount;
