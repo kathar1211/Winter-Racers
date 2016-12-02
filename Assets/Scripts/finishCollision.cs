@@ -10,7 +10,7 @@ public class finishCollision : MonoBehaviour {
             bool cheatRef = other.gameObject.GetComponent<Sled>().isCheating;
             if (!cheatRef)
             {
-                Debug.Log("Soo... ye?");
+                //Debug.Log("Soo... ye?");
                 other.gameObject.GetComponent<Sled>().currLap++;
                 other.gameObject.GetComponent<Sled>().isCheating = true;
             }

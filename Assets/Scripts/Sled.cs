@@ -34,6 +34,7 @@ public class Sled : MonoBehaviour {
     public bool isCheating = false;
     public int currLap = 0;
     public float time = 0.0f;
+    public bool finished = false;
 
     public GameObject gSled;
 	Rigidbody sled;
@@ -108,7 +109,7 @@ public class Sled : MonoBehaviour {
             c.gameObject.SetActive(false);
             UpdateCookieMeter();
         }
-		Debug.Log (c.gameObject.tag.ToString ());
+		//Debug.Log (c.gameObject.tag.ToString ());
 		if (c.gameObject.tag == "Snowball" && items.Count < 1) {
 			items.Add(c.gameObject);
 			itemSprite.SetActive (true);
@@ -180,7 +181,7 @@ public class Sled : MonoBehaviour {
                 usingBoost = true;
                 boostBar.GetComponent<BoostBar>().ResetMeter();
                 cookieCount = 0;
-                Debug.Log("Boostin'");
+                //Debug.Log("Boostin'");
             }
         }
 
@@ -200,7 +201,7 @@ public class Sled : MonoBehaviour {
                 usingBoost = false;
                 maxSpeed = 2.0f;
                 acceleration = 0.005f;
-                Debug.Log("End Boost");
+                //Debug.Log("End Boost");
                 
             }
             boostTimer -= Time.deltaTime;
