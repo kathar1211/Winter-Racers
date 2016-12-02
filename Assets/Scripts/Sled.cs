@@ -31,6 +31,9 @@ public class Sled : MonoBehaviour {
     float boostTimer = 5.0f;
     bool usingBoost = false;
 
+	private bool hit;
+	private float hitTimer = 0.0f;
+
     public bool isCheating = false;
     public int currLap = 0;
     public float time = 0.0f;
@@ -44,15 +47,14 @@ public class Sled : MonoBehaviour {
 
 	bool raceStart = false;
 
-	public GameObject itemSprite;
-	public GameObject ThrownSnowball;
+	//public Image snowballSprite;
+	public GameObject gThrownSnowball;
 	private GameObject s;
 	//public Image snowballSprite;//this is for when we have multiple objects
 
 
 	void Start(){
-		//Instantiate (boostBar, boostBar.transform.position, boostBar.transform.rotation);
-		itemSprite.SetActive (false);
+
 	}
 
 	// Update is called once per frame
@@ -66,6 +68,22 @@ public class Sled : MonoBehaviour {
 
 		if (holdingItem) {
 			DisplayItemHeld();
+		}
+
+		if (hit) {
+			if(hitTimer >= 2.0f){
+				hitTimer = 0.0f;
+				hit = false;
+				sled.drag = 1;
+				sled.angularDrag = 1;
+			}
+			else{
+				hitTimer += Time.deltaTime;
+				sled.AddTorque(new Vector3(0, 0, -9 * x));
+				sled.drag = 0;
+				sled.angularDrag = 0;
+				sled.velocity = new Vector3(0, 0,0);
+			}
 		}
 
 	}//updoot
@@ -83,9 +101,11 @@ public class Sled : MonoBehaviour {
 		}
 		DriftControl();
 
-		//if (Input.GetButton(X) && items.Count == 0) {
-		//	ThrowSnowball();
-		//}
+		if (Input.GetButton(X) && items.Count > 0) {
+			//Debug.Log("throw balls for what");
+			//snowballSprite.GetComponent<Image>().enabled = false;
+			ThrowSnowball();
+		}
 
 		//backing up
 		if (Input.GetAxis(LTB)!= 0)
@@ -96,7 +116,6 @@ public class Sled : MonoBehaviour {
 			}           
 			MoveBackwards();
 		}
-
 	}
 
     void OnTriggerEnter(Collider c)
@@ -109,20 +128,22 @@ public class Sled : MonoBehaviour {
             UpdateCookieMeter();
         }
 		Debug.Log (c.gameObject.tag.ToString ());
+		Debug.Log (items.Count);
 		if (c.gameObject.tag == "Snowball" && items.Count < 1) {
 			items.Add(c.gameObject);
-			itemSprite.SetActive (true);
-			//Debug.Log(itemSprite.GetComponent<Image> ().color.ToString());
-
+			//snowballSprite.GetComponent<Image>().enabled = true;
+			//rangeDebug.Log ("Distance: " + distance);Debug.Log("ayyy lmao");
+			Debug.Log ("hit a snowball.");
 			c.gameObject.SetActive(false);
 			holdingItem = true;
 			item = c.gameObject;
+
 		}
 
 		if (c.gameObject.tag == "ThrownSnowball" && c.gameObject.GetComponent<Snowball>().Thrower != null) {
-			if(c.gameObject.GetComponent<Snowball>().Thrower != gSled.tag){
-				sled.AddTorque(new Vector3(0, 0, -3 * x * (drag / Time.deltaTime)));
-				sled.velocity = new Vector3(0, 0,0);
+			if(c.gameObject.GetComponent<Snowball>().throwName != gSled.name){
+				hit = true;
+
 				Debug.Log ("Player: " + gSled.name);
 				Debug.Log ("Snowball: " + c.gameObject.GetComponent<Snowball>().Thrower);
 				Destroy(c.gameObject);
@@ -227,15 +248,13 @@ public class Sled : MonoBehaviour {
 	}
 
 	public void ThrowSnowball(){
-		item.GetComponent<Snowball> ().StartPos = transform.position;
-		item.GetComponent<Snowball> ().Dir = transform.up;
-		item.GetComponent<Snowball> ().Thrower = gSled.name;
-		Debug.Log ("sled name: " + gSled.name);
-		item.GetComponent<Snowball> ().Thrown = true;
-		Debug.Log (item.GetComponent<Snowball> ().Thrown);
-		s = (GameObject)Instantiate(ThrownSnowball, transform.position, Quaternion.identity); 
+		s = (GameObject)Instantiate(gThrownSnowball, transform.position, gSled.transform.rotation); 
+		s.GetComponent<Snowball>().SetTheFuckingDirection (transform.up, gSled.name);
+		//s.GetComponent<Snowball> ().Dir = transform.up;
+		//s.GetComponent<Snowball> ().Thrower = gSled.name;;
+		//s.GetComponent<Snowball> ().Thrown = true;
+		
 		items.RemoveAt (0);
-		itemSprite.SetActive (false);
 		Debug.Log (items.Count);
 	}
 

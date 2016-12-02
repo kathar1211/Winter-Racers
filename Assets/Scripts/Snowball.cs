@@ -3,17 +3,17 @@ using System.Collections;
 
 public class Snowball : MonoBehaviour {
 
-	public float range;
-	public float force;
-
+	private float range;
 	private string thrower;
 
 	private Vector3 startPos;
 	private Vector2 pos;
-	private Vector2 dir;
+	public Vector3 dir;
 	private float distance;
-
-	public GameObject g_snowball;
+	public Vector3 testVector;
+	public string throwName;
+	
+	//public GameObject g_snowball;
 	Rigidbody snowball;
 
 	private bool thrown = false;
@@ -37,23 +37,26 @@ public class Snowball : MonoBehaviour {
 		set{ pos = value;}
 	}
 
-	public Vector2 Dir{
+	public Vector3 Dir{
 		set{ dir = value;}
+		get{ return dir;}
 	}
 	
 	// Use this for initialization
 	void Start () {
-		snowball = g_snowball.GetComponent<Rigidbody> ();
-
+		snowball = this.gameObject.GetComponent<Rigidbody> ();
+		startPos = transform.position;
+		dir = new Vector3 (0.0f, 0.0f, 0.0f);
+		range = 5;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//Debug.Log (transform.position);
-		if (g_snowball.tag == "ThrownSnowball") {
+		//Debug.Log (this.gameObject.tag);
+		if (this.tag == "ThrownSnowball") {
 			Threw ();
-			///Debug.Log (thrown);
-			pos = transform.position;
+			//Debug.Log ("walk into the sled like whaddup");
+			//pos = transform.position;
 		}
 	}
 
@@ -62,14 +65,37 @@ public class Snowball : MonoBehaviour {
 	}
 
 	public void Threw(){
-		//snowball.AddForce (dir * Time.deltaTime);
-		//Debug.Log (dir);
-		//distance = Vector2.Distance (startPos, pos);
-		//if (distance > range) {
-		//	thrown = false;
-		//	Debug.Log ("Distance: " + distance);
-		//	Destroy(g_snowball);
-		//}
+		snowball.AddForce (transform.up * 7);
+
+		distance = Vector2.Distance (startPos, transform.position);
+
+		Debug.Log ("Distance: " + distance);
+		Debug.Log ("Range: " + range);
+		Debug.Log ("dir: " + dir);
+		Debug.Log ("startpos: " + startPos);
+		Debug.Log (transform.position);
+
+		Debug.Log ("thrower name: " + thrower);
+
+
+		if (distance > range) {
+			thrown = false;
+			Debug.Log ("DIE DIE DIE DIE");
+			Destroy(this.gameObject);
+		}
+	}
+
+	public void SetTheFuckingDirection(Vector3 fuckingDirection, string name){
+		testVector = fuckingDirection;
+		throwName = name;
+		Debug.Log (fuckingDirection);
+		float x = fuckingDirection.x;
+		Debug.Log ("x " + x);
+		dir.x = fuckingDirection.x;
+		dir.y = fuckingDirection.y;
+		dir.z = fuckingDirection.z;
+		Debug.Log("set teh fukkin direction");
+		Debug.Log ("Dir set: " + dir);
 	}
 
 
