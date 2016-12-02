@@ -18,8 +18,10 @@ public class StateManager : MonoBehaviour {
     private GameObject canvas;
     private int instructIndex;
     private GameObject[] players;
-    private int winningPlayer;
+    private int[] playerOrder;
     private Sled tempSled;
+    private int numFinished;
+    private Text[] playerLaps;
     public Text canvasTxt;  //Menu txt
     public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
@@ -35,37 +37,56 @@ public class StateManager : MonoBehaviour {
     void getPlayers()
     {
         players = GameObject.FindGameObjectsWithTag("Player");
+        playerOrder = new int[players.Length];
+        playerLaps = new Text[players.Length];
+        playerLaps[0] = GameObject.Find("P1cookieTxt").GetComponent<Text>();
+        if(players.Length > 1)
+        {
+            playerLaps[1] = GameObject.Find("P2cookieTxt").GetComponent<Text>();
+        }
+}
+
+    void updateLap()
+    {
+        for(int i = 0; i < players.Length; i++)
+        {
+            playerLaps[i].text = "P" + (i+1) + " Cookiometer        " + (players[i].GetComponent<Sled>().currLap) + "/" + numLaps;
+        }
     }
 
     void checkGameOver()
     {
-        int finished = 0;
-        if (finished != players.Length)
+        if (numFinished != players.Length)
         {
             for (int i = 0; i < players.Length; i++)
             {
-                if (players[i].GetComponent<Sled>().currLap == numLaps + 1)
+                if (players[i].GetComponent<Sled>().currLap == (numLaps + 1) && !players[i].GetComponent<Sled>().finished)
                 {
                     ////players[i] wins!
                     //winningPlayer = i;
-                    finished += 1;
-                    players[i].GetComponent<Sled>().time = Time.time;
+                    numFinished += 1;
+                    players[i].GetComponent<Sled>().time = Time.timeSinceLevelLoad;
                     //Disabling the script may allow the sled to stay, but prevent further input.
                     players[i].GetComponent<Sled>().enabled = false;
+                    players[i].GetComponent<Sled>().finished = true;
                 }
             }
         }
-        if (finished == players.Length)
+        else //(numFinished == players.Length)
         {
-            currState = State.GameOver;
-            for (int i = 0; i < players.Length; i++)
+            for (int j = 0; j < players.Length; j++)
             {
-                if (tempSled.time > players[i].GetComponent<Sled>().time)
+                if (tempSled.time > players[j].GetComponent<Sled>().time)
                 {
-                    tempSled.time = players[i].GetComponent<Sled>().time;
-                    winningPlayer = i;
+                    tempSled.time = players[j].GetComponent<Sled>().time;
+                    playerOrder[0] = j;
+                }
+                else
+                {
+                    playerOrder[1] = j;
                 }
             }
+            currState = State.GameOver;
         }
     }
 
@@ -117,8 +138,17 @@ public class StateManager : MonoBehaviour {
                 canvasImg.color = Color.clear;
                 canvasTxt.alignment = TextAnchor.LowerCenter;
                 canvasTxt.fontSize = 18;
-                canvasTxt.text = "Player " + (winningPlayer + 1) + " Wins!\n" + (int)(tempSled.time / 60) +
-                    ":" + ((tempSled.time % 60)).ToString("n2") + "\nPress BACK to Quit. Press START to try again!\n";
+                if (players.Length > 1)
+                {
+                    canvasTxt.text = "Player " + (playerOrder[0] + 1) + " Wins!\nTime: " + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
+                        ":" + ((tempSled.time % 60)).ToString("n2") + "\n\nPlayer " + (playerOrder[1] + 1) + "\nTime: " + (int)(players[playerOrder[1]].GetComponent<Sled>().time / 60) +
+                        ":" + ((tempSled.time % 60)).ToString("n2") + "\n\nPress BACK to Quit. Press START to try again!\n";
+                }
+                else
+                {
+                    canvasTxt.text = "Player " + (playerOrder[0] + 1) + "\nTime: " + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
+                        ":" + ((tempSled.time % 60)).ToString("n2") + "\n\n\nPress BACK to Quit. Press START to try again!\n";
+                }
                 break;
         }
     }
@@ -137,6 +167,7 @@ public class StateManager : MonoBehaviour {
         Time.timeScale = 0;
         tempSled = new Sled();
         tempSled.time = float.MaxValue;
+        numFinished = 0;
     }
 
     // Update is called once per frame
@@ -174,6 +205,7 @@ public class StateManager : MonoBehaviour {
                 setScreen(currState);
                 //Check GameOver
                 checkGameOver();
+                updateLap();
                 break;
 
             case State.GameOver:

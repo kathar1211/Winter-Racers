@@ -37,6 +37,7 @@ public class Sled : MonoBehaviour {
     public bool isCheating = false;
     public int currLap = 0;
     public float time = 0.0f;
+    public bool finished = false;
 
     public GameObject gSled;
 	Rigidbody sled;
@@ -79,7 +80,7 @@ public class Sled : MonoBehaviour {
 			}
 			else{
 				hitTimer += Time.deltaTime;
-				sled.AddTorque(new Vector3(0, 0, -9 * x));
+				sled.AddTorque(new Vector3(0, 0, -18 * x));
 				sled.drag = 0;
 				sled.angularDrag = 0;
 				sled.velocity = new Vector3(0, 0,0);
@@ -127,8 +128,6 @@ public class Sled : MonoBehaviour {
             c.gameObject.SetActive(false);
             UpdateCookieMeter();
         }
-		Debug.Log (c.gameObject.tag.ToString ());
-		Debug.Log (items.Count);
 		if (c.gameObject.tag == "Snowball" && items.Count < 1) {
 			items.Add(c.gameObject);
 			//snowballSprite.GetComponent<Image>().enabled = true;
@@ -140,7 +139,7 @@ public class Sled : MonoBehaviour {
 
 		}
 
-		if (c.gameObject.tag == "ThrownSnowball" && c.gameObject.GetComponent<Snowball>().Thrower != null) {
+		if (c.gameObject.tag == "ThrownSnowball" ) {
 			if(c.gameObject.GetComponent<Snowball>().throwName != gSled.name){
 				hit = true;
 
@@ -201,7 +200,7 @@ public class Sled : MonoBehaviour {
                 usingBoost = true;
                 boostBar.GetComponent<BoostBar>().ResetMeter();
                 cookieCount = 0;
-                Debug.Log("Boostin'");
+                //Debug.Log("Boostin'");
             }
         }
 
@@ -221,7 +220,7 @@ public class Sled : MonoBehaviour {
                 usingBoost = false;
                 maxSpeed = 2.0f;
                 acceleration = 0.005f;
-                Debug.Log("End Boost");
+                //Debug.Log("End Boost");
                 
             }
             boostTimer -= Time.deltaTime;

@@ -78,7 +78,7 @@ public class BoostBar : MonoBehaviour {
     {
         if (meter.rect.width == 100)
         {
-			Debug.Log (meter.rect.width);
+			//Debug.Log (meter.rect.width);
             return true;
         }
         return false;

@@ -88,7 +88,7 @@ public class GameManager : MonoBehaviour {
 			Debug.Log("Detected " + c + " controllers");
 			for (int i = 0; i < c; ++i){
                 players[i] = (GameObject)Instantiate(players[i], players[i].transform.position, players[i].transform.rotation);
-                Debug.Log("should have made a player");
+                //Debug.Log("should have made a player");
                
                 //assign boostbar and make it visible
                 players[i].GetComponent<Sled>().boostBar = boostBars[i];                
