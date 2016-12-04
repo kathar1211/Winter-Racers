@@ -76,7 +76,7 @@ public class StateManager : MonoBehaviour {
         {
             for (int j = 0; j < players.Length; j++)
             {
-                if (tempSled.time > players[j].GetComponent<Sled>().time)
+                if (tempSled.time >= players[j].GetComponent<Sled>().time)
                 {
                     tempSled.time = players[j].GetComponent<Sled>().time;
                     playerOrder[0] = j;
@@ -141,13 +141,13 @@ public class StateManager : MonoBehaviour {
                 if (players.Length > 1)
                 {
                     canvasTxt.text = "Player " + (playerOrder[0] + 1) + " Wins!\nTime: " + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
-                        ":" + ((tempSled.time % 60)).ToString("n2") + "\n\nPlayer " + (playerOrder[1] + 1) + "\nTime: " + (int)(players[playerOrder[1]].GetComponent<Sled>().time / 60) +
-                        ":" + ((tempSled.time % 60)).ToString("n2") + "\n\nPress BACK to Quit. Press START to try again!\n";
+                        ":" + ((players[playerOrder[0]].GetComponent<Sled>().time % 60)).ToString("n2") + "\n\nPlayer " + (playerOrder[1] + 1) + "\nTime: " + (int)(players[playerOrder[1]].GetComponent<Sled>().time / 60) +
+                        ":" + ((players[playerOrder[1]].GetComponent<Sled>().time % 60)).ToString("n2") + "\n\nPress BACK to Quit. Press START to try again!\n";
                 }
                 else
                 {
                     canvasTxt.text = "Player " + (playerOrder[0] + 1) + "\nTime: " + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
-                        ":" + ((tempSled.time % 60)).ToString("n2") + "\n\n\nPress BACK to Quit. Press START to try again!\n";
+                        ":" + ((players[playerOrder[0]].GetComponent<Sled>().time % 60)).ToString("n2") + "\n\n\nPress BACK to Quit. Press START to try again!\n";
                 }
                 break;
         }
