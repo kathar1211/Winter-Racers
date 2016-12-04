@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
 	List<GameObject> players = new List<GameObject>();
 	List<GameObject> boostBars = new List<GameObject> ();
+	List<Image> snowballs = new List<Image> ();
 
 	public GameObject player1;
 	public GameObject player2;
@@ -25,6 +27,11 @@ public class GameManager : MonoBehaviour {
 	public Sprite three;
 	public Sprite go;
 
+	public Image p1_snowball;
+	public Image p2_snowball;
+	public Image p3_snowball;
+	public Image p4_snowball;
+
 	private float countdownTimer = 3.0f;
 	private bool counted = false;
 
@@ -41,6 +48,11 @@ public class GameManager : MonoBehaviour {
 		boostBars.Add (boostBar3);
 		boostBars.Add (boostBar4);
 
+		snowballs.Add (p1_snowball);
+		snowballs.Add (p2_snowball);
+		snowballs.Add (p3_snowball);
+		snowballs.Add (p4_snowball);
+
         CreatePlayerList();
 
     }
@@ -50,6 +62,15 @@ public class GameManager : MonoBehaviour {
 		if (GetComponent<StateManager> ().GameStart && counted == false) {
 		
 			ItsTheFinalCountdown ();
+		}
+
+		for(int i = 0; i < players.Count; ++i){
+			if(players[i].GetComponent<Sled>().HoldingItem){
+				snowballs[i].GetComponent<Image>().enabled = true;
+			}
+			else{
+				snowballs[i].GetComponent<Image>().enabled = false;
+			}
 		}
 	}
 

@@ -18,6 +18,11 @@ public class Sled : MonoBehaviour {
 	private bool eatedCookie;
 	private bool holdingItem = false;
 
+	public bool HoldingItem{
+		get{ return holdingItem;}
+		set{ holdingItem = value;}
+	}
+
 	float x;
 
 	float deadzone = 0.2f;
