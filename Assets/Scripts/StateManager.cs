@@ -23,6 +23,7 @@ public class StateManager : MonoBehaviour {
     private int numFinished;
     private Text[] playerLaps;
     public Text canvasTxt;  //Menu txt
+    public Text canvasTxt2; //inactive on all screens except game over
     public Image canvasImg; //Menu img
     public Sprite[] menuBackgrounds;
     public int numLaps;
@@ -107,6 +108,7 @@ public class StateManager : MonoBehaviour {
                 canvasTxt.fontSize = 36;
                 canvasTxt.color = Color.black;
                 canvasTxt.text = "";
+                canvasTxt2.text = "";
                 break;
 
             case State.Instruction:
@@ -114,6 +116,7 @@ public class StateManager : MonoBehaviour {
                 canvasImg.color = Color.white;
                 canvasTxt.fontSize = 22;
                 canvasTxt.text = "";
+                canvasTxt2.text = "";
                 break;
 
             case State.Game:
@@ -135,22 +138,42 @@ public class StateManager : MonoBehaviour {
                 Time.timeScale = 0f;
                 //Display Canvas
                 canvas.SetActive(true);
-                canvasImg.color = Color.clear;
-                canvasTxt.alignment = TextAnchor.LowerCenter;
+                canvasImg.color = Color.white;
+                canvasImg.sprite = menuBackgrounds[checkWinner()];
                 canvasTxt.fontSize = 18;
                 if (players.Length > 1)
                 {
-                    canvasTxt.text = "Player " + (playerOrder[0] + 1) + " Wins!\nTime: " + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
+                    //"Player " + (playerOrder[0] + 1) + " Wins!\nTime: "
+                    canvasTxt.text = "\t\t\t" + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
                         ":" + ((players[playerOrder[0]].GetComponent<Sled>().time % 60)).ToString("n2") + "\n\nPlayer " + (playerOrder[1] + 1) + "\nTime: " + (int)(players[playerOrder[1]].GetComponent<Sled>().time / 60) +
-                        ":" + ((players[playerOrder[1]].GetComponent<Sled>().time % 60)).ToString("n2") + "\n\nPress BACK to Quit. Press START to try again!\n";
+                        ":" + ((players[playerOrder[1]].GetComponent<Sled>().time % 60)).ToString("n2");
                 }
                 else
                 {
-                    canvasTxt.text = "Player " + (playerOrder[0] + 1) + "\nTime: " + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
-                        ":" + ((players[playerOrder[0]].GetComponent<Sled>().time % 60)).ToString("n2") + "\n\n\nPress BACK to Quit. Press START to try again!\n";
+                    canvasTxt.text = "\t\t\t" + (int)(players[playerOrder[0]].GetComponent<Sled>().time / 60) +
+                        ":" + ((players[playerOrder[0]].GetComponent<Sled>().time % 60)).ToString("n2");
                 }
+                canvasTxt2.alignment = TextAnchor.LowerCenter;
+                canvasTxt2.fontSize = 18;
+                canvasTxt2.text = "Press BACK to Quit. Press START to try again!\n";
                 break;
         }
+    }
+
+    //use this to check which win screen to display 
+    int checkWinner()
+    {
+        //player 1 win screen is at index 4, p2 at index 5
+
+        switch (playerOrder[0])
+        {
+            case 0: return 4;
+            case 1: return 5;
+        }
+
+
+        //this shouldn't happen since we have maximum two players
+        return -1;
     }
 
     // Use this for initialization
