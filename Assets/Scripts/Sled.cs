@@ -214,8 +214,8 @@ public class Sled : MonoBehaviour {
             if (boostTimer > 0)
             {
                 //increase maxspeed and acceleration while boost active
-                maxSpeed = 79999.0f;
-                acceleration = 6.0f;
+                maxSpeed = 8.0f;
+                acceleration = 5.0f;
 				sled.AddForce (transform.up*acceleration);
                 //Debug.Log(boostTimer);
             }

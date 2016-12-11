@@ -12,7 +12,7 @@ public class ItemManager : MonoBehaviour {
 	public GameObject[] snowballs;
 
     private float[] respawnTimers;
-
+    private float[] snowballTimers;
 
     // Starts by finding all items with the cookie tag, this way if we have other levels we don't have to manually add them to an array
     void Start()
@@ -25,6 +25,12 @@ public class ItemManager : MonoBehaviour {
         for (int i = 0; i < respawnTimers.Length; i++)
         {
             respawnTimers[i] = 0;
+        }
+
+        snowballTimers = new float[snowballs.Length];
+        for (int i = 0; i < snowballTimers.Length; i++)
+        {
+            snowballTimers[i] = 0;
         }
 
     }
@@ -46,12 +52,17 @@ public class ItemManager : MonoBehaviour {
 
         for (int i = 0; i < cookies.Length; i++)
         {
-            respawnTimers[i] = setCookieState(cookies[i], respawnTimers[i]);
+            respawnTimers[i] = SetItemState(cookies[i], respawnTimers[i], 10.0f);
+        }
+
+        for (int i = 0; i < snowballs.Length; i++)
+        {
+            snowballTimers[i] = SetItemState(snowballs[i], snowballTimers[i], 20.0f);
         }
     }
 
     // Once a cookie is not active, the timer starts for it and then it respawns once it reaches that time. 
-    public float setCookieState(GameObject item, float respawnTimer)
+    /*public float setCookieState(GameObject item, float respawnTimer)
     {
         if (item.activeSelf == false)
         {
@@ -63,17 +74,18 @@ public class ItemManager : MonoBehaviour {
             }
         }
         return respawnTimer;
-    }
+    }*/
 
-	public void SetSnowballState(GameObject item){
+	public float SetItemState(GameObject item, float itemTimer, float maxTime){
 		if (item.activeSelf == false)
 		{
 			itemTimer += 0.05f;
-			if (itemTimer >= 10.0f)
+			if (itemTimer >= maxTime)
 			{
 				itemTimer = 0;
 				item.SetActive(true);
 			}
 		}
+        return itemTimer;
 	}
 }
